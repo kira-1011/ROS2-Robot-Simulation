@@ -1,31 +1,147 @@
 <?xml version="1.0"?>
-<sdf version="1.7">
+<sdf version="1.9">
   <world name="robot_sim_world">
 
-    <include>
-      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Ground Plane</uri>
-    </include>
+    <!-- light -->
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>1 1 1 1</diffuse>
+      <specular>0.5 0.5 0.5 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
 
-    <!-- Add a box obstacle -->
-    <model name="box_obstacle">
+    <!-- plane -->
+    <model name="ground_plane">
       <static>true</static>
-      <pose>1 0 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <!-- box obstacle -->
+    <model name="wall">
+      <static>true</static>
+      <pose>0 4 0.25 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>0.5 0.5 0.5</size>
+              <size>15 0.5 1</size>
             </box>
           </geometry>
           <material>
-            <ambient>0.5 0.5 0.5 1</ambient>
+            <ambient>0.0 1.0 0.0 1</ambient>
+            <diffuse>0.0 1.0 0.0 1</diffuse>
+            <specular>0.0 1.0 0.0 1</specular>
           </material>
         </visual>
       </link>
     </model>
 
+    <model name="box_obstacle">
+      <static>true</static>
+      <pose>4 2 0.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>1 1 2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.0 1.0 1</ambient>
+            <diffuse>0.1 0.0 1.0 1</diffuse>
+            <specular>0.1 0.0 1.0 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+
+    <model name="cylinder_obstacle">
+      <static>true</static>
+      <pose>2 -8 0.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1.0</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>1 0.0 0.1 1</ambient>
+            <diffuse>1 0.0 0.1 1</diffuse>
+            <specular>1 0.0 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+
     <physics type="dart">
       <real_time_factor>1</real_time_factor>
     </physics>
+
+    <!-- <plugin filename="gz-sim-triggered-publisher-system" name="gz::sim::systems::TriggeredPublisher"> -->
+    <!-- up -->
+    <!-- <input type="gz.msgs.Int32" topic="/keyboard/keypress">
+        <match field="data">16777235</match>
+      </input>
+      <output type="gz.msgs.Twist" topic="/cmd_vel">
+        linear: {x: 0.5}, angular: {z: 0.0}
+      </output> -->
+
+    <!-- down -->
+    <!-- <input type="gz.msgs.Int32" topic="/keyboard/keypress">
+        <match field="data">16777237</match>
+      </input>
+      <output type="gz.msgs.Twist" topic="/cmd_vel">
+        linear: {x: -0.5}, angular: {z: 0.0}
+      </output> -->
+
+    <!-- left -->
+    <!-- <input type="gz.msgs.Int32" topic="/keyboard/keypress">
+        <match field="data">16777234</match>
+      </input>
+      <output type="gz.msgs.Twist" topic="/cmd_vel">
+        linear: {x: 0.0}, angular: {z: 0.5}
+      </output> -->
+
+    <!-- right -->
+    <!-- <input type="gz.msgs.Int32" topic="/keyboard/keypress">
+        <match field="data">16777236</match>
+      </input>
+      <output type="gz.msgs.Twist" topic="/cmd_vel">
+        linear: {x: 0.0}, angular: {z: -0.5}
+      </output> -->
+    <!-- </plugin> -->
+
   </world>
 </sdf>

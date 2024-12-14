@@ -1,28 +1,46 @@
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
+from std_msgs.msg import Int32
 
 
-class MoveRobotNode(Node):
+class KeyboardListener(Node):
     def __init__(self):
-        super().__init__("move_robot_node")
-        self.publisher_ = self.create_publisher(Twist, "/cmd_vel", 10)
-        timer_period = 2
-        self.timer = self.create_timer(timer_period, self.publish_velocity_command)
-
-    def publish_velocity_command(self):
-        msg = Twist()
-        msg._linear._x = 0.1
-        msg._angular._z = 0.0
-        self.publisher_.publish(msg)
-        self.get_logger().info(
-            f"Publishing cmd_vel: linear.x={msg._linear.x}, angular.z={msg._angular._z}"
+        super().__init__("keyboard_listener")
+        self.subscription = self.create_subscription(
+            Int32, "/keyboard/keypress", self.move_by_key, 10
         )
+        self.publisher = self.create_publisher(Twist, "/cmd_vel", 10)
+
+    def move_by_key(self, msg):
+        key = msg.data
+        if key == 16777235:
+            self.get_logger().info("Key pressed: Up")
+            msg = Twist()
+            msg.linear.x = -0.5
+            self.publisher.publish(msg)
+        elif key == 16777237:
+            self.get_logger().info("Key pressed: Down")
+            msg = Twist()
+            msg.linear.x = 0.5
+            self.publisher.publish(msg)
+        elif key == 16777234:
+            self.get_logger().info("Key pressed: Left")
+            msg = Twist()
+            msg.linear.x = 0.0
+            msg.angular.z = 0.5
+            self.publisher.publish(msg)
+        elif key == 16777236:
+            self.get_logger().info("Key pressed: Right")
+            msg = Twist()
+            msg.linear.x = 0.0
+            msg.angular.z = -0.5
+            self.publisher.publish(msg)
 
 
 def main(args=None):
     rclpy.init(args=args)
-    node = MoveRobotNode()
+    node = KeyboardListener()
     rclpy.spin(node)
 
     node.destroy_node()
