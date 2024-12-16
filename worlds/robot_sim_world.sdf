@@ -1,6 +1,19 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <sdf version="1.9">
-  <world name="robot_sim_world">
+  <world name="Moving_robot">
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics">
+    </plugin>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands">
+    </plugin>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
 
     <!-- light -->
     <light type="directional" name="sun">
@@ -28,6 +41,18 @@
               <size>100 100</size>
             </plane>
           </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>50</mu>
+              </ode>
+              <bullet>
+                <friction>1</friction>
+                <friction2>1</friction2>
+                <rolling_friction>0.1</rolling_friction>
+              </bullet>
+            </friction>
+          </surface>
         </collision>
         <visual name="visual">
           <geometry>
@@ -44,6 +69,7 @@
         </visual>
       </link>
     </model>
+
     <!-- box obstacle -->
     <model name="wall">
       <static>true</static>
@@ -61,6 +87,13 @@
             <specular>0.0 1.0 0.0 1</specular>
           </material>
         </visual>
+        <collision name='collision'>
+          <geometry>
+            <box>
+              <size>15 0.5 1</size>
+            </box>
+          </geometry>
+        </collision>
       </link>
     </model>
 
@@ -80,9 +113,15 @@
             <specular>0.1 0.0 1.0 1</specular>
           </material>
         </visual>
+        <collision name='collision'>
+          <geometry>
+            <box>
+              <size>1 1 2</size>
+            </box>
+          </geometry>
+        </collision>
       </link>
     </model>
-
 
     <model name="cylinder_obstacle">
       <static>true</static>
@@ -101,47 +140,52 @@
             <specular>1 0.0 0.1 1</specular>
           </material>
         </visual>
+        <collision name='collision'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1.0</length>
+            </cylinder>
+          </geometry>
+        </collision>
       </link>
     </model>
 
-
-    <physics type="dart">
-      <real_time_factor>1</real_time_factor>
-    </physics>
-
-    <!-- <plugin filename="gz-sim-triggered-publisher-system" name="gz::sim::systems::TriggeredPublisher"> -->
-    <!-- up -->
-    <!-- <input type="gz.msgs.Int32" topic="/keyboard/keypress">
-        <match field="data">16777235</match>
-      </input>
-      <output type="gz.msgs.Twist" topic="/cmd_vel">
-        linear: {x: 0.5}, angular: {z: 0.0}
-      </output> -->
-
-    <!-- down -->
-    <!-- <input type="gz.msgs.Int32" topic="/keyboard/keypress">
-        <match field="data">16777237</match>
-      </input>
-      <output type="gz.msgs.Twist" topic="/cmd_vel">
-        linear: {x: -0.5}, angular: {z: 0.0}
-      </output> -->
-
-    <!-- left -->
-    <!-- <input type="gz.msgs.Int32" topic="/keyboard/keypress">
+    <!-- Moving Left-->
+    <plugin filename="gz-sim-triggered-publisher-system" name="gz::sim::systems::TriggeredPublisher">
+      <input type="gz.msgs.Int32" topic="/keyboard/keypress">
         <match field="data">16777234</match>
       </input>
       <output type="gz.msgs.Twist" topic="/cmd_vel">
-        linear: {x: 0.0}, angular: {z: 0.5}
-      </output> -->
-
-    <!-- right -->
-    <!-- <input type="gz.msgs.Int32" topic="/keyboard/keypress">
+                linear: {x: 0.0}, angular: {z: -0.5}
+      </output>
+    </plugin>
+    <!-- Moving Forward-->
+    <plugin filename="gz-sim-triggered-publisher-system" name="gz::sim::systems::TriggeredPublisher">
+      <input type="gz.msgs.Int32" topic="/keyboard/keypress">
+        <match field="data">16777235</match>
+      </input>
+      <output type="gz.msgs.Twist" topic="/cmd_vel">
+                linear: {x: 0.5}, angular: {z: 0.0}
+      </output>
+    </plugin>
+    <!-- Moving Right-->
+    <plugin filename="gz-sim-triggered-publisher-system" name="gz::sim::systems::TriggeredPublisher">
+      <input type="gz.msgs.Int32" topic="/keyboard/keypress">
         <match field="data">16777236</match>
       </input>
       <output type="gz.msgs.Twist" topic="/cmd_vel">
-        linear: {x: 0.0}, angular: {z: -0.5}
-      </output> -->
-    <!-- </plugin> -->
-
+                linear: {x: 0.0}, angular: {z: 0.5}
+      </output>
+    </plugin>
+    <!-- Moving Backward-->
+    <plugin filename="gz-sim-triggered-publisher-system" name="gz::sim::systems::TriggeredPublisher">
+      <input type="gz.msgs.Int32" topic="/keyboard/keypress">
+        <match field="data">16777237</match>
+      </input>
+      <output type="gz.msgs.Twist" topic="/cmd_vel">
+                linear: {x: -0.5}, angular: {z: 0.0}
+      </output>
+    </plugin>
   </world>
 </sdf>

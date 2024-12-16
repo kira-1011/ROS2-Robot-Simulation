@@ -38,6 +38,7 @@ setup(
     entry_points={
         "console_scripts": [
             "move_robot=robot_sim.robot:main",
+            "opencv_node=robot_sim.opencv:main",
         ],
     },
 )

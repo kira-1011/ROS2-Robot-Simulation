@@ -38,22 +38,6 @@ def generate_launch_description():
         ],
         output="screen",
     )
-
-    # # bridge cmd_vel topic from ros2 to gazebo and vice versa
-    # bridge_to_gz_twist = Node(
-    #     package="ros_gz_bridge",
-    #     executable="parameter_bridge",
-    #     arguments=["/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist"],
-    #     output="screen",
-    # )
-
-    # bridge_to_gz_key = Node(
-    #     package="ros_gz_bridge",
-    #     executable="parameter_bridge",
-    #     arguments=["/keyboard/keypress@std_msgs/msg/Int32@gz.msgs.Int32"],
-    #     output="screen",
-    # )
-
     # Bridge
     bridge = Node(
         package="ros_gz_bridge",
@@ -67,4 +51,4 @@ def generate_launch_description():
         output="screen",
     )
 
-    return LaunchDescription([ign_gazebo, robot_state_publisher, spawn_robot, bridge])
+    return LaunchDescription([ign_gazebo, robot_state_publisher, bridge, spawn_robot])
