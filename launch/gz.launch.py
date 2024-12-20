@@ -44,9 +44,9 @@ def generate_launch_description():
         executable="parameter_bridge",
         arguments=[
             "/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist",
-            "/keyboard/keypress@std_msgs/msg/Int32@gz.msgs.Int32",
-            "/camera@sensor_msgs/msg/Image@gz.msgs.Image",
-            "/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo",
+            # "/keyboard/keypress@std_msgs/msg/Int32@gz.msgs.Int32",
+            "/camera/image_raw@sensor_msgs/msg/Image@gz.msgs.Image",
+            "/camera/depth/image_raw@sensor_msgs/msg/Image@gz.msgs.Image",
         ],
         output="screen",
     )
