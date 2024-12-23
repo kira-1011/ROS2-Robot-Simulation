@@ -47,6 +47,7 @@ def generate_launch_description():
             # "/keyboard/keypress@std_msgs/msg/Int32@gz.msgs.Int32",
             "/camera/image_raw@sensor_msgs/msg/Image@gz.msgs.Image",
             "/camera/depth/image_raw@sensor_msgs/msg/Image@gz.msgs.Image",
+            # "/camera/depth/image_raw/points@sensor_msgs/msg/PointCloud2@gz.msgs.PointCloudPacked",
         ],
         output="screen",
     )
