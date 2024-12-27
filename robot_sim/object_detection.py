@@ -14,17 +14,18 @@ class ObjectDetectionNode(Node):
 
         self.model = YOLO("yolov5nu.pt")
 
+        self.publisher = self.create_publisher(Image, "/camera/detections", 10)
         # Create subscription to camera topic
         self.subscription = self.create_subscription(
             Image,
             "/camera/image_raw",
-            self.image_callback,
+            self.detect_objects,
             10,
         )
 
         self.get_logger().info("Object Detection Node has been started")
 
-    def image_callback(self, msg):
+    def detect_objects(self, msg):
         try:
             # Convert ROS Image message to OpenCV image
             cv_image = self.bridge.imgmsg_to_cv2(msg, "bgr8")
@@ -33,9 +34,13 @@ class ObjectDetectionNode(Node):
             # Get the annotated frame
             annotated_frame = results.plot()
 
+            # convert frame to ros2 image message
+            image_msg = self.bridge.cv2_to_imgmsg(annotated_frame, "bgr8")
+            self.publisher.publish(image_msg)
+
             # Display results
-            cv2.imshow("YOLOv5 Detections", annotated_frame)
-            cv2.waitKey(1)
+            # cv2.imshow("YOLOv5 Detections", annotated_frame)
+            # cv2.waitKey(1)
 
             # # Log detections
             # for box in results.boxes:
